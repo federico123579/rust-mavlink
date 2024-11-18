@@ -910,7 +910,7 @@ pub fn read_v2_raw_message_signed<M: Message, R: Read>(
 
 fn read_v2_raw_message_inner<M: Message, R: Read>(
     reader: &mut PeekReader<R>,
-    signing_data: Option<&SigningData>,
+    _signing_data: Option<&SigningData>,
 ) -> Result<MAVLinkV2MessageRaw, error::MessageReadError> {
     loop {
         loop {
