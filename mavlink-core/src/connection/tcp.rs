@@ -142,6 +142,16 @@ impl<M: Message> MavConnection<M> for TcpConnection {
         self.protocol_version
     }
 
+    fn set_read_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let mut guard = self.reader.lock().unwrap();
+        guard.reader_mut().set_read_timeout(timeout)
+    }
+
+    fn set_write_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let guard = self.writer.lock().unwrap();
+        guard.socket.set_write_timeout(timeout)
+    }
+
     #[cfg(feature = "signing")]
     fn setup_signing(&mut self, signing_data: Option<SigningConfig>) {
         self.signing_data = signing_data.map(SigningData::from_config)

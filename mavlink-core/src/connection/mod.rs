@@ -29,6 +29,9 @@ pub trait MavConnection<M: Message> {
     fn set_protocol_version(&mut self, version: MavlinkVersion);
     fn protocol_version(&self) -> MavlinkVersion;
 
+    fn set_write_timeout(&mut self, timeout: Option<std::time::Duration>) -> io::Result<()>;
+    fn set_read_timeout(&mut self, timeout: Option<std::time::Duration>) -> io::Result<()>;
+
     /// Write whole frame
     fn send_frame(&self, frame: &MavFrame<M>) -> Result<usize, crate::error::MessageWriteError> {
         self.send(&frame.header, &frame.msg)

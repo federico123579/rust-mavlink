@@ -157,7 +157,7 @@ pub struct MavFrame<M: Message> {
 }
 
 impl<M: Message> MavFrame<M> {
-    /// Create a new frame with given message
+    //    /// Create a new frame with given message
     //    pub fn new(msg: MavMessage) -> MavFrame {
     //        MavFrame {
     //            header: MavHeader::get_default_header(),

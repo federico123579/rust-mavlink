@@ -8,6 +8,7 @@ use core::ops::DerefMut;
 use std::fs::File;
 use std::io;
 use std::sync::Mutex;
+use std::time::Duration;
 
 #[cfg(not(feature = "signing"))]
 use crate::read_versioned_msg;
@@ -71,6 +72,20 @@ impl<M: Message> MavConnection<M> for FileConnection {
 
     fn protocol_version(&self) -> MavlinkVersion {
         self.protocol_version
+    }
+
+    fn set_read_timeout(&mut self, _timeout: Option<Duration>) -> io::Result<()> {
+        Err(io::Error::new(
+            io::ErrorKind::Other,
+            "File connection does not support read timeout",
+        ))
+    }
+
+    fn set_write_timeout(&mut self, _timeout: Option<Duration>) -> io::Result<()> {
+        Err(io::Error::new(
+            io::ErrorKind::Other,
+            "File connection does not support write timeout",
+        ))
     }
 
     #[cfg(feature = "signing")]

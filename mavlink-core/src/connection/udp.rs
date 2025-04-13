@@ -1,6 +1,7 @@
 //! UDP MAVLink connection
 
 use std::collections::VecDeque;
+use std::time::Duration;
 
 use crate::connection::MavConnection;
 use crate::peek_reader::PeekReader;
@@ -184,6 +185,16 @@ impl<M: Message> MavConnection<M> for UdpConnection {
 
     fn protocol_version(&self) -> MavlinkVersion {
         self.protocol_version
+    }
+
+    fn set_read_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let mut guard = self.reader.lock().unwrap();
+        guard.reader_mut().socket.set_read_timeout(timeout)
+    }
+
+    fn set_write_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let guard = self.writer.lock().unwrap();
+        guard.socket.set_write_timeout(timeout)
     }
 
     #[cfg(feature = "signing")]

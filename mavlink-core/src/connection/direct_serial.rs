@@ -6,6 +6,7 @@ use crate::{MavHeader, MavlinkVersion, Message};
 use core::ops::DerefMut;
 use std::io;
 use std::sync::Mutex;
+use std::time::Duration;
 
 use crate::error::{MessageReadError, MessageWriteError};
 use serial::{prelude::*, SystemPort};
@@ -120,6 +121,20 @@ impl<M: Message> MavConnection<M> for SerialConnection {
 
     fn protocol_version(&self) -> MavlinkVersion {
         self.protocol_version
+    }
+
+    fn set_read_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let mut guard = self.port.lock().unwrap();
+        let timeout = timeout.unwrap_or(Duration::ZERO);
+        guard.reader_mut().set_timeout(timeout)?;
+        Ok(())
+    }
+
+    fn set_write_timeout(&mut self, timeout: Option<Duration>) -> io::Result<()> {
+        let mut guard = self.port.lock().unwrap();
+        let timeout = timeout.unwrap_or(Duration::ZERO);
+        guard.reader_mut().set_timeout(timeout)?;
+        Ok(())
     }
 
     #[cfg(feature = "signing")]
